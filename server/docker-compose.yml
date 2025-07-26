@@ -10,11 +10,13 @@ services:
     volumes:
       - dnd-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       start_period: 5s
       timeout: 3s
       retries: 3
+    networks:
+      - dnd
 
   dnd-api:
     build:
@@ -34,7 +36,8 @@ services:
       LOG_LEVEL: debug
       SERVER_BIND: 0.0.0.0:8080
       HEALTH_BIND: :9001
-      METRICS_BIND: :9002
+    networks:
+      - dnd
 
 volumes:
   dnd-db:

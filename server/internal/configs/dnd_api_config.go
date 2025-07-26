@@ -13,9 +13,8 @@ type DnDAPIConfig struct {
 	LogPretty bool          `envconfig:"LOG_PRETTY"`
 	LogLevel  logging.Level `envconfig:"LOG_LEVEL"  required:"true"`
 
-	HealthBind  string `envconfig:"HEALTH_BIND"  required:"true"`
-	MetricsBind string `envconfig:"METRICS_BIND" required:"true"`
-	ServerBind  string `envconfig:"SERVER_BIND"  required:"true"`
+	HealthBind string `envconfig:"HEALTH_BIND"  required:"true"`
+	ServerBind string `envconfig:"SERVER_BIND"  required:"true"`
 }
 
 func (c DnDAPIConfig) GetLogPretty() bool {
