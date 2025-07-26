@@ -1,0 +1,48 @@
+services:
+  dnd-db:
+    image: postgres:14.5-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PWD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - dnd-db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      start_period: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - dnd
+
+  dnd-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+      args:
+        GO_VER: "1.23"
+        ALPINE_VER: "3.20"
+    ports:
+      - "${API_PORT:-8080}:8080"
+    depends_on:
+      api-db:
+        condition: service_healthy
+    environment:
+      DB_CONN: "host=dnd-db port=5432 user=${DB_USER} password=${DB_PWD} dbname=${DB_NAME} sslmode=disable"
+      LOG_LEVEL: debug
+      SERVER_BIND: 0.0.0.0:8080
+      HEALTH_BIND: :9001
+    networks:
+      - dnd
+
+volumes:
+  dnd-db:
+    driver: local
+
+networks:
+  dnd:
+    name: dnd
