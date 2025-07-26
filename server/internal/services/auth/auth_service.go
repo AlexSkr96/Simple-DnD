@@ -89,7 +89,6 @@ func (s *Service) Login(ctx context.Context, req *models.LoginRequest) (*models.
 		return nil, ErrInvalidEmailOrPassword
 	}
 
-	// Create session
 	token, err := s.generateToken()
 	if err != nil {
 		return nil, errors.WithStack(err)
