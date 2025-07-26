@@ -39,7 +39,6 @@ func initApp() (app *common.App, cleanup func(), err error) {
 	}
 
 	logger := bootstrap.NewConfiguredLogger(dndAPIConfig)
-	dndRouter := bootstrap.NewDnDAPIRouter(logger)
 	gormConfig := dndAPIConfig.GORMConfig
 	driverName := bootstrap.NewPGDBDriverName(gormConfig, logger)
 	db, cleanup, err := bootstrap.NewGORMDB(logger, gormConfig, driverName)
@@ -50,6 +49,7 @@ func initApp() (app *common.App, cleanup func(), err error) {
 
 	repository := infra.NewGORMRepository(db)
 	authService := auth.NewService(repository)
+	dndRouter := bootstrap.NewDnDAPIRouter(logger, authService)
 	server := api.NewServer(logger, dndAPIConfig.ServerBind, dndRouter, repository, authService)
 	app = bootstrap.NewDnDAPIApp(dndAPIConfig, logger, server)
 	return app, func() {
