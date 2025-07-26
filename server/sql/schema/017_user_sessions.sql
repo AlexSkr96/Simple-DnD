@@ -15,5 +15,7 @@ create index idx_user_sessions_expires_at on user_sessions(expires_at);
 
 -- +goose Down
 -- +goose StatementBegin
+drop index if exists idx_user_sessions_expires_at;
+drop index if exists idx_user_sessions_token;
 drop table user_sessions;
 -- +goose StatementEnd

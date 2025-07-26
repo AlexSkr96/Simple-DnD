@@ -33,6 +33,7 @@ type UserSession struct {
 	Token     string    `gorm:"size:255;not null;uniqueIndex" json:"token"`
 	ExpiresAt time.Time `gorm:"not null" json:"expires_at"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UserID    uuid.UUID `gorm:"type:uuid;not null" json:"user_id"`
 	User      User      `gorm:"foreignKey:user_id" json:"user,omitempty"`
 }
 

@@ -13,6 +13,11 @@ import (
 	"time"
 )
 
+const (
+	sessionExpirationDuration = 24 * time.Hour
+	tokenLength               = 32
+)
+
 type Service struct {
 	repository infra.Repository
 }
@@ -59,8 +64,9 @@ func (s *Service) Register(ctx context.Context, req *models.RegisterRequest) (*m
 	session := &models.UserSession{
 		ID:        uuid.New(),
 		Token:     token,
-		ExpiresAt: now.Add(24 * time.Hour),
+		ExpiresAt: now.Add(sessionExpirationDuration),
 		CreatedAt: now,
+		UserID:    user.ID,
 		User:      *user,
 	}
 
@@ -99,8 +105,9 @@ func (s *Service) Login(ctx context.Context, req *models.LoginRequest) (*models.
 	session := &models.UserSession{
 		ID:        uuid.New(),
 		Token:     token,
-		ExpiresAt: now.Add(24 * time.Hour),
+		ExpiresAt: now.Add(sessionExpirationDuration),
 		CreatedAt: now,
+		UserID:    user.ID,
 		User:      *user,
 	}
 
@@ -129,7 +136,7 @@ func (s *Service) Logout(ctx context.Context, token string) error {
 }
 
 func (s *Service) generateToken() (string, error) {
-	bytes := make([]byte, 32)
+	bytes := make([]byte, tokenLength)
 	if _, err := rand.Read(bytes); err != nil {
 		return "", err
 	}
