@@ -1,4 +1,4 @@
-package services
+package auth
 
 import (
 	"context"
@@ -13,17 +13,17 @@ import (
 	"time"
 )
 
-type AuthService struct {
+type Service struct {
 	repository infra.Repository
 }
 
-func NewAuthService(repository infra.Repository) *AuthService {
-	return &AuthService{
+func NewService(repository infra.Repository) *Service {
+	return &Service{
 		repository: repository,
 	}
 }
 
-func (s *AuthService) Register(ctx context.Context, req *models.RegisterRequest) (*models.AuthResponseBody, error) {
+func (s *Service) Register(ctx context.Context, req *models.RegisterRequest) (*models.AuthResponseBody, error) {
 	_, err := s.repository.FindUserByEmail(ctx, req.Email)
 	if err == nil {
 		return nil, ErrUserAlreadyExists
@@ -75,7 +75,7 @@ func (s *AuthService) Register(ctx context.Context, req *models.RegisterRequest)
 	}, nil
 }
 
-func (s *AuthService) Login(ctx context.Context, req *models.LoginRequest) (*models.AuthResponseBody, error) {
+func (s *Service) Login(ctx context.Context, req *models.LoginRequest) (*models.AuthResponseBody, error) {
 	user, err := s.repository.FindUserByEmail(ctx, req.Email)
 	if errors.Is(err, errpkg.ErrNoRows) {
 		return nil, ErrInvalidEmailOrPassword
@@ -116,7 +116,7 @@ func (s *AuthService) Login(ctx context.Context, req *models.LoginRequest) (*mod
 	}, nil
 }
 
-func (s *AuthService) ValidateToken(ctx context.Context, token string) (*models.User, error) {
+func (s *Service) ValidateToken(ctx context.Context, token string) (*models.User, error) {
 	session, err := s.repository.FindSessionByToken(ctx, token)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -125,11 +125,11 @@ func (s *AuthService) ValidateToken(ctx context.Context, token string) (*models.
 	return &session.User, nil
 }
 
-func (s *AuthService) Logout(ctx context.Context, token string) error {
+func (s *Service) Logout(ctx context.Context, token string) error {
 	return s.repository.DeleteSession(ctx, token)
 }
 
-func (s *AuthService) generateToken() (string, error) {
+func (s *Service) generateToken() (string, error) {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
 		return "", err

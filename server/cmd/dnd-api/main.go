@@ -6,6 +6,7 @@ import (
 	"github.com/AlexSkr96/Simple-DnD/internal/bootstrap"
 	"github.com/AlexSkr96/Simple-DnD/internal/configs"
 	"github.com/AlexSkr96/Simple-DnD/internal/infra"
+	"github.com/AlexSkr96/Simple-DnD/internal/services/auth"
 	"github.com/AlexSkr96/Simple-DnD/pkg/common"
 	"github.com/AlexSkr96/Simple-DnD/pkg/logging"
 )
@@ -48,7 +49,8 @@ func initApp() (app *common.App, cleanup func(), err error) {
 	}
 
 	repository := infra.NewGORMRepository(db)
-	server := api.NewServer(logger, dndAPIConfig.ServerBind, dndRouter, repository)
+	authService := auth.NewService(repository)
+	server := api.NewServer(logger, dndAPIConfig.ServerBind, dndRouter, repository, authService)
 	app = bootstrap.NewDnDAPIApp(dndAPIConfig, logger, server)
 	return app, func() {
 		cleanup()

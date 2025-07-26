@@ -35,3 +35,8 @@ type UserSession struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	User      User      `gorm:"foreignKey:user_id" json:"user,omitempty"`
 }
+
+type LogoutRequest struct {
+	XRequestID    uuid.UUID `header:"X-Request-Id"`
+	Authorization string    `header:"Authorization"`
+}
