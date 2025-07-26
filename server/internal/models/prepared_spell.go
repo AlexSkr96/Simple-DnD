@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type CharacterPreparedSpell struct {
+type PreparedSpell struct {
 	ID          uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
 	SpellID     uuid.UUID `gorm:"type:uuid;not null" json:"spell_id"`
 	CharacterID uuid.UUID `gorm:"type:uuid;not null" json:"character_id"`
