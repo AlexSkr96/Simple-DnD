@@ -35,10 +35,27 @@ func NewGORMDB(
 		return nil, cleanup, errors.WithStack(err)
 	}
 
-	sqlDB.SetMaxOpenConns(conf.DBMaxOpenConns)
-	sqlDB.SetMaxIdleConns(conf.DBMaxIddleConns)
-	sqlDB.SetConnMaxIdleTime(time.Duration(conf.DBConnMaxIdleTimeMin) * time.Minute)
-	sqlDB.SetConnMaxLifetime(time.Duration(conf.DBConnMaxLifetimeMin) * time.Minute)
+	// Validate and set connection pool parameters with defaults if unset
+	maxOpenConns := conf.DBMaxOpenConns
+	if maxOpenConns <= 0 {
+		maxOpenConns = 10 // Default value
+	}
+	sqlDB.SetMaxOpenConns(maxOpenConns)
+	maxIdleConns := conf.DBMaxIdleConns
+	if maxIdleConns <= 0 {
+		maxIdleConns = 5 // Default value
+	}
+	sqlDB.SetMaxIdleConns(maxIdleConns)
+	connMaxIdleTime := conf.DBConnMaxIdleTimeMin
+	if connMaxIdleTime <= 0 {
+		connMaxIdleTime = 5 // Default value in minutes
+	}
+	sqlDB.SetConnMaxIdleTime(time.Duration(connMaxIdleTime) * time.Minute)
+	connMaxLifetime := conf.DBConnMaxLifetimeMin
+	if connMaxLifetime <= 0 {
+		connMaxLifetime = 30 // Default value in minutes
+	}
+	sqlDB.SetConnMaxLifetime(time.Duration(connMaxLifetime) * time.Minute)
 
 	err = sqlDB.Ping()
 	if err != nil {

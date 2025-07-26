@@ -7,6 +7,3 @@ create table character_spell_slots
     max          integer,
     slots_left   integer
 );
-
--- +goose Down
-drop table character_spell_slots;

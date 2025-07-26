@@ -9,8 +9,9 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - dnd-db:/var/lib/postgresql/data
+      - ./sql/local-dc:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}"]
       interval: 10s
       start_period: 5s
       timeout: 3s
@@ -29,10 +30,11 @@ services:
     ports:
       - "${API_PORT:-8080}:8080"
     depends_on:
-      api-db:
+      dnd-db:
         condition: service_healthy
     environment:
-      DB_CONN: "host=dnd-db port=5432 user=${DB_USER} password=${DB_PWD} dbname=${DB_NAME} sslmode=disable"
+      DB_CONN: "host=dnd-db port=${DB_PORT} user=${DB_USER} password=${DB_PWD} dbname=${DB_NAME} sslmode=disable"
+      LOG_PRETTY: true
       LOG_LEVEL: debug
       SERVER_BIND: 0.0.0.0:8080
       HEALTH_BIND: :9001

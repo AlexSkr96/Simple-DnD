@@ -4,6 +4,3 @@ create table character_prepared_spells(
     spell_id UUID references spells(id),
     character_id UUID references characters(id)
 );
-
--- +goose Down
-drop table character_prepared_spells;
