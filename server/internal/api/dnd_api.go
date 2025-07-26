@@ -78,7 +78,7 @@ func (s *Server) Serve(ctx context.Context) error {
 	huma.Register(s.api, huma.Operation{
 		Method:        http.MethodPost,
 		Path:          prefix + "/auth/logout",
-		DefaultStatus: http.StatusOK,
+		DefaultStatus: http.StatusNoContent,
 		Errors:        []int{http.StatusUnauthorized, http.StatusInternalServerError},
 		Tags:          []string{"auth"},
 		Summary:       "Logout user",
