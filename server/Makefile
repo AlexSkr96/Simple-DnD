@@ -62,6 +62,15 @@ db-mi-create: $(GOOSE_BIN) ## creates a new db migration. Example: `make db-mi-c
 	@PATH="$(LOCAL_BIN):$(PATH)"; \
 	GOOSE_DRIVER=postgres $(GOOSE_BIN) $(GOOSE_DIR) create $(NAME) sql
 
+compose-build:
+	docker-compose -f docker-compose.yml build
+
+compose-up:
+	docker-compose -f docker-compose.yml up
+
+compose-down:
+	docker-compose -f docker-compose.yml down --remove-orphans
+
 .PHONY: help
 help: ## shows this help
 	@grep --no-filename -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
