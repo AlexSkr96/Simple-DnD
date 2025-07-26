@@ -14,7 +14,12 @@ func GetRequestIDFromCtx(ctx context.Context) string {
 		return ""
 	}
 
-	return ctx.Value(ctxKeyRequestID{}).(string) //nolint: forcetypeassert
+	valStr, ok := ctx.Value(ctxKeyRequestID{}).(string)
+	if !ok {
+		return ""
+	}
+
+	return valStr
 }
 
 func ContextWithRequestID(ctx context.Context, requestID string) context.Context {

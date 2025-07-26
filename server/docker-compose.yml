@@ -29,7 +29,7 @@ services:
     ports:
       - "${API_PORT:-8080}:8080"
     depends_on:
-      api-db:
+      dnd-db:
         condition: service_healthy
     environment:
       DB_CONN: "host=dnd-db port=5432 user=${DB_USER} password=${DB_PWD} dbname=${DB_NAME} sslmode=disable"
