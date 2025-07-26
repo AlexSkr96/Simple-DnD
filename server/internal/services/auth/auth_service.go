@@ -26,7 +26,7 @@ func NewAuthService(repository infra.Repository) *AuthService {
 func (s *AuthService) Register(ctx context.Context, req *models.RegisterRequest) (*models.AuthResponseBody, error) {
 	_, err := s.repository.FindUserByEmail(ctx, req.Email)
 	if err == nil {
-		return nil, errors.New("user with this email already exists")
+		return nil, ErrUserAlreadyExists
 	}
 	if !errors.Is(err, errpkg.ErrNoRows) {
 		return nil, errors.WithStack(err)
@@ -78,7 +78,7 @@ func (s *AuthService) Register(ctx context.Context, req *models.RegisterRequest)
 func (s *AuthService) Login(ctx context.Context, req *models.LoginRequest) (*models.AuthResponseBody, error) {
 	user, err := s.repository.FindUserByEmail(ctx, req.Email)
 	if errors.Is(err, errpkg.ErrNoRows) {
-		return nil, errors.New("invalid email or password")
+		return nil, ErrInvalidEmailOrPassword
 	}
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -86,7 +86,7 @@ func (s *AuthService) Login(ctx context.Context, req *models.LoginRequest) (*mod
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password))
 	if err != nil {
-		return nil, errors.New("invalid email or password")
+		return nil, ErrInvalidEmailOrPassword
 	}
 
 	// Create session
