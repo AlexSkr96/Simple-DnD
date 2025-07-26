@@ -62,13 +62,19 @@ db-mi-create: $(GOOSE_BIN) ## creates a new db migration. Example: `make db-mi-c
 	@PATH="$(LOCAL_BIN):$(PATH)"; \
 	GOOSE_DRIVER=postgres $(GOOSE_BIN) $(GOOSE_DIR) create $(NAME) sql
 
+.PHONY: compose-build
 compose-build:
+	DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PWD=$(DB_PWD) DB_PORT=$(DB_PORT) \
 	docker-compose -f docker-compose.yml build
 
+.PHONY: compose-up
 compose-up:
+	DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PWD=$(DB_PWD) DB_PORT=$(DB_PORT) \
 	docker-compose -f docker-compose.yml up
 
+.PHONY: compose-down
 compose-down:
+	DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PWD=$(DB_PWD) DB_PORT=$(DB_PORT) \
 	docker-compose -f docker-compose.yml down --remove-orphans
 
 .PHONY: help

@@ -15,7 +15,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app -ldflags "-X 'main.version=${VERSION}'" ./cmd/reports-api
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app -ldflags "-X 'main.version=${VERSION}'" ./cmd/dnd-api
 
 FROM ${ALPINE_IMAGE}:${ALPINE_VER} AS app
 WORKDIR /root/

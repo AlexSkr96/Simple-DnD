@@ -11,7 +11,7 @@ services:
       - dnd-db:/var/lib/postgresql/data
       - ./sql/local-dc:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}"]
       interval: 10s
       start_period: 5s
       timeout: 3s
