@@ -11,3 +11,7 @@ type User struct {
 	PasswordHash string      `gorm:"size:255" json:"-"`
 	Characters   []Character `gorm:"foreignKey:UserID" json:"characters,omitempty"`
 }
+
+func (User) TableName() string {
+	return "users"
+}

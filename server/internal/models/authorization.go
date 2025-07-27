@@ -37,6 +37,10 @@ type UserSession struct {
 	User      User      `gorm:"foreignKey:user_id" json:"user,omitempty"`
 }
 
+func (UserSession) TableName() string {
+	return "user_sessions"
+}
+
 type LogoutRequest struct {
 	XRequestID    uuid.UUID `header:"X-Request-Id"`
 	Authorization string    `header:"Authorization"`

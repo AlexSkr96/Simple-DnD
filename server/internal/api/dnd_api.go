@@ -86,6 +86,17 @@ func (s *Server) Serve(ctx context.Context) error {
 		OperationID:   "logout",
 	}, s.Logout)
 
+	huma.Register(s.api, huma.Operation{
+		Method:        http.MethodPost,
+		Path:          prefix + "/grant_experience/{gameRoomId}/{characterId}",
+		DefaultStatus: http.StatusCreated,
+		Errors:        []int{http.StatusBadRequest, http.StatusNotFound, http.StatusUnauthorized, http.StatusForbidden, http.StatusInternalServerError},
+		Tags:          []string{"experience"},
+		Summary:       "Grant experience",
+		Description:   "Grant experience points to character (Game Master only)",
+		OperationID:   "grant-experience",
+	}, s.GrantExperience)
+
 	go func() {
 		s.logger.Info("starting dnd-api server on ", s.bind)
 

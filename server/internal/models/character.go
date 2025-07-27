@@ -33,3 +33,7 @@ type Character struct {
 	PreparedSpells []PreparedSpell    `gorm:"foreignKey:CharacterID" json:"prepared_spells,omitempty"`
 	SpellSlots     []SpellSlot        `gorm:"foreignKey:CharacterID" json:"spell_slots,omitempty"`
 }
+
+func (Character) TableName() string {
+	return "characters"
+}
