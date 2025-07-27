@@ -17,4 +17,10 @@ type Repository interface {
 	CreateSession(ctx context.Context, session *models.UserSession) error
 	FindSessionByToken(ctx context.Context, token string) (*models.UserSession, error)
 	DeleteSession(ctx context.Context, token string) error
+	// GameRoom methods
+	FindGameRoomByID(ctx context.Context, id uuid.UUID) (*models.GameRoom, error)
+	FindGameRoomOwnerID(ctx context.Context, roomID uuid.UUID) (uuid.UUID, error)
+	FindCharacterByIDAndRoomID(ctx context.Context, id uuid.UUID, roomID uuid.UUID) (*models.Character, error)
+	// Experience methods
+	GrantExperience(ctx context.Context, grant *models.ExperienceGrant) error
 }
