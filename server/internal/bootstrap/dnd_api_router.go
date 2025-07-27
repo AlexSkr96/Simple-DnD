@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"encoding/json"
+	"github.com/AlexSkr96/Simple-DnD/internal/services/auth"
 	"github.com/AlexSkr96/Simple-DnD/pkg/errors"
 	"github.com/AlexSkr96/Simple-DnD/pkg/logging"
 	"github.com/AlexSkr96/Simple-DnD/pkg/middleware"
@@ -17,13 +18,14 @@ const origin = "dnd-api"
 
 func NewDnDAPIRouter(
 	logger logging.Logger,
+	authService *auth.Service,
 ) DnDAPI {
 	r := chi.NewRouter()
 	r.Use(
 		Custom404Middleware(logger),
 		middleware.CORSHandler(),
 		middleware.NewPanicRecoverer(logger, origin),
-		middleware.AuthenticateEndpoint(logger, origin),
+		middleware.AuthenticateEndpoint(logger, authService, origin),
 	)
 
 	cfg := huma.DefaultConfig("DnD API", "1.0.0")
