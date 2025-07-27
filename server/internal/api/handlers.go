@@ -6,7 +6,6 @@ import (
 	"github.com/AlexSkr96/Simple-DnD/internal/services/auth"
 	errpkg "github.com/AlexSkr96/Simple-DnD/pkg/errors"
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"net/http"
 	"strings"
@@ -103,7 +102,6 @@ func (s *Server) GrantExperience(ctx context.Context, p *models.GrantExperienceP
 	}
 
 	grant := &models.ExperienceGrant{
-		ID:          uuid.New(),
 		CharacterID: p.CharacterID,
 		Amount:      p.Body.Amount,
 		Reason:      p.Body.Reason,
