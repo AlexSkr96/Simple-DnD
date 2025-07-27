@@ -43,5 +43,5 @@ func (UserSession) TableName() string {
 
 type LogoutRequest struct {
 	XRequestID    uuid.UUID `header:"X-Request-Id"`
-	Authorization string    `header:"Authorization"`
+	Authorization string    `header:"Authorization" required:"true"`
 }
