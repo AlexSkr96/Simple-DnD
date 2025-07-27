@@ -4,3 +4,6 @@ create table game_room_participants(
     user_id UUID references users(id),
     game_room_id UUID references game_rooms(id)
 );
+
+-- +goose Down
+drop table game_room_participants;

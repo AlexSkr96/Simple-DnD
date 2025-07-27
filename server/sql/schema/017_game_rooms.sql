@@ -5,3 +5,6 @@ create table game_rooms (
     name varchar(255) not null,
     owner_id UUID not null references users(id) -- owner is always a game master
 );
+
+-- +goose Down
+drop table game_rooms;
